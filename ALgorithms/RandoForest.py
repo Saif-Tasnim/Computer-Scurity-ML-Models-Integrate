@@ -7,7 +7,7 @@ import time
 from imblearn.over_sampling import RandomOverSampler
 
 # Load the dataset
-data = pd.read_csv('../Datasets/transaction - used.csv')
+data = pd.read_csv('C:/Users/ABCD/Desktop/Computer Security/Datasets/transaction - used.csv')
 
 # Step 1: Balance the 'isFraud' column using oversampling
 oversample = RandomOverSampler(sampling_strategy='minority')
@@ -35,9 +35,7 @@ X['nameDest'] = pd.factorize(X['nameDest'])[0]
 
 # Split into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Further split the training set into training and validation sets
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.125, random_state=42)
 
 # Step 4: Run Random Forest model
 start_time = time.time()
@@ -65,3 +63,18 @@ print("Accuracy on Testing Set:", test_accuracy)
 
 # Step 6: Print total time taken
 print("Total Time Taken:", end_time - start_time, "seconds")
+
+# plot the result line chart
+
+# Store the accuracy scores in lists
+accuracy_scores = [train_accuracy, val_accuracy, test_accuracy]
+
+labels = ['Training', 'Validation', 'Testing']
+plt.plot(labels, accuracy_scores, marker='o')
+plt.title('Accuracy Scores')
+plt.xlabel('Dataset')
+plt.ylabel('Accuracy')
+plt.ylim(0, 1)  # Set the y-axis limits from 0 to 1
+plt.grid(True)
+plt.show()
+

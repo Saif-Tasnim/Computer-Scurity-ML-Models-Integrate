@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 from sklearn.preprocessing import OneHotEncoder
 from imblearn.over_sampling import RandomOverSampler
 import matplotlib.pyplot as plt
@@ -31,7 +31,7 @@ X = df_sampled.drop('isFraud', axis=1)
 y = df_sampled['isFraud']
 
 # Encode categorical variables
-# X = pd.get_dummies(X, columns=['type'])
+# X = pd.get_dummies(X, columns=['Type'])
 X['type'] = pd.factorize(X['type'])[0]
 X['nameOrig'] = pd.factorize(X['nameOrig'])[0]
 X['nameDest'] = pd.factorize(X['nameDest'])[0]
@@ -40,18 +40,18 @@ X['nameDest'] = pd.factorize(X['nameDest'])[0]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.125, random_state=42)
 
-# Step 7: Initialize the Gaussian Naive Bayes model
-nb_model = GaussianNB()
+# Step 7: Initialize the Support Vector Machine model
+svm_model = SVC()
 
 # Step 8: Train the model and measure the time taken
 start_time = time.time()
-nb_model.fit(X_train, y_train)
+svm_model.fit(X_train, y_train)
 train_time = time.time() - start_time
 
 # Step 9: Predict the target variable for the training, validation, and testing sets
-y_train_pred = nb_model.predict(X_train)
-y_val_pred = nb_model.predict(X_val)
-y_test_pred = nb_model.predict(X_test)
+y_train_pred = svm_model.predict(X_train)
+y_val_pred = svm_model.predict(X_val)
+y_test_pred = svm_model.predict(X_test)
 
 # Step 10: Calculate and print the accuracy for training, validation, and testing sets
 train_accuracy = (y_train_pred == y_train).mean()
@@ -64,3 +64,17 @@ print("Testing set accuracy:", test_accuracy)
 
 # Step 11: Print the total time taken for training
 print("Training time:", train_time)
+
+# plot the result line chart
+
+# Store the accuracy scores in lists
+accuracy_scores = [train_accuracy, val_accuracy, test_accuracy]
+
+labels = ['Training', 'Validation', 'Testing']
+plt.plot(labels, accuracy_scores, marker='o')
+plt.title('Accuracy Scores')
+plt.xlabel('Dataset')
+plt.ylabel('Accuracy')
+plt.ylim(0, 1)  # Set the y-axis limits from 0 to 1
+plt.grid(True)
+plt.show()
